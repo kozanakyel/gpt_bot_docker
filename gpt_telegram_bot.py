@@ -108,6 +108,13 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 print(f'Response : {response_text}') 
                
                 last_textchat = (question, chat)
+            elif (question, chat) != last_textchat and question.startswith('/doc'):
+                response_text= f"Welcome the ShopyVerse GPT Docs.\nUse /gpt for getting Text response.\nUse /vgpt for getting Voice response.\nUse /dpt for creating AI images from Dalle model."
+                
+                send_telegram_message(chat_id=chat_id_group, message=response_text)
+                print(f'Response : {response_text}') 
+               
+                last_textchat = (question, chat)
             elif (question, chat) != last_textchat and question.startswith('/vgpt'):
                 response = openai.Completion.create(
                     engine="text-davinci-003",
@@ -116,10 +123,10 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                     n=1
                 )
                 response_text = response['choices'][0]['text']
-                file_name = f'audios/ChatGPT{remove_spaces(response_text[:5])}.mp3'
+                file_name = f'data/audios/ChatGPT{remove_spaces(response_text[:5])}.mp3'
                 
                 tts = gTTS(response_text, lang='tr', tld="com")
-                tts.save(f'audios/ChatGPT{remove_spaces(response_text[:5])}.mp3')
+                tts.save(file_name)
                 response_tg = send_audio_with_telegram(chat_id=chat_id_group,
                              file_path=file_name,
                              post_file_title=f'received-{remove_spaces(response_text[:5])}.mp3',
@@ -138,7 +145,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 )
                 
                 image_url = response['data'][0]['url']
-                file_name = f'images/dll_img_{hash(image_url)}.png'              
+                file_name = f'data/images/dll_img_{hash(image_url)}.png'              
                 res = requests.get(image_url, stream = True)
                 with open(file_name,'wb') as f:
                     shutil.copyfileobj(res.raw, f)
@@ -157,3 +164,6 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
         time.sleep(1)
 
 telegram_live_gpt_response(url_info=url_info, chat_id_group=CHAT_ID_GROUP, telegram_bot_api_env=TELEGRAM_BOT_API_ENV)  
+
+# docker build -t kozanakyel/gpt_bot:v0.2 .
+# docker run --rm --name gpt_bot -v gpt_bot_data:/data kozanakyel/gpt_bot:v0.2
