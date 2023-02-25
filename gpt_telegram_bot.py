@@ -70,7 +70,7 @@ def get_last_chat_id_and_text(updates):
     last_update = num_updates - 1
     text = updates["result"][last_update]["message"]["text"]
     chat_id = updates["result"][last_update]["message"]["chat"]["id"]
-    return (text, chat_id)
+    return (text, chat_id, last_update)
 
 def remove_spaces(string):
     return "".join(string.split())
@@ -88,14 +88,19 @@ def send_telegram_message(chat_id, message):
 # chat_id_group=CHAT_ID_GROUP, telegram_bot_api_env=TELEGRAM_BOT_API_ENV
 def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_api_env: str):
     last_textchat = (None, None)
+    current_update = 0
     print('Hello GPt, VGPT and DGPT running')
     while True:
         # ses klasoru icindekileri komple silmek gerekli
         result = requests.get(url=url_info).json()
         #print(result)
         try:
-            question, chat = get_last_chat_id_and_text(result)
-            if (question, chat) != last_textchat and question.startswith('/gpt'):
+            question, chat, last_update = get_last_chat_id_and_text(result)
+            print(f'questtion: {question} - chat: {chat} - last_update: {last_update}')
+            
+            
+            cond1 = (question, chat) != last_textchat or current_update != last_update
+            if cond1 and question.startswith('/gpt'):
                 response = openai.Completion.create(
                     engine="text-davinci-003",
                     prompt=question[3:],
@@ -109,14 +114,14 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 print(f'Response : {response_text}') 
                
                 last_textchat = (question, chat)
-            elif (question, chat) != last_textchat and question.startswith('/doc'):
+            elif cond1 and question.startswith('/doc'):
                 response_text= f"Welcome the ShopyVerse GPT Docs.\nUse /gpt for getting Text response.\nUse /vgpt for getting Voice response.\nUse /dpt for creating AI images from Dalle model."
                 
                 send_telegram_message(chat_id=chat_id_group, message=response_text)
                 print(f'Response : {response_text}') 
                
                 last_textchat = (question, chat)
-            elif (question, chat) != last_textchat and question.startswith('/vgpt'):
+            elif cond1 and question.startswith('/vgpt'):
                 response = openai.Completion.create(
                     engine="text-davinci-003",
                     prompt=question[4:],
@@ -138,7 +143,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 
                 os.remove(file_name)
                 print(f'removed this file {file_name}')
-            elif (question, chat) != last_textchat and question.startswith('/dgpt'):
+            elif cond1 and question.startswith('/dgpt'):
                 response = openai.Image.create(
                     prompt=question[4:],
                     n=1,
@@ -162,7 +167,8 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 print(f'removed this file {file_name}')
         except:
             print(f'last activity not including message')
-        time.sleep(0.1)
+        current_update = last_update
+        time.sleep(1)
 
 
 telegram_live_gpt_response(url_info=url_info, chat_id_group=CHAT_ID_GROUP, telegram_bot_api_env=TELEGRAM_BOT_API_ENV)  
