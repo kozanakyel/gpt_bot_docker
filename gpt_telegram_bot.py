@@ -162,7 +162,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 print(f'removed this file {file_name}')
         except:
             print(f'last activity not including message')
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 telegram_live_gpt_response(url_info=url_info, chat_id_group=CHAT_ID_GROUP, telegram_bot_api_env=TELEGRAM_BOT_API_ENV)  
