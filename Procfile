@@ -1,0 +1,1 @@
+web: python gpt_telegram_bot.py
