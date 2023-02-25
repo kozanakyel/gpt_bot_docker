@@ -102,6 +102,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                     max_tokens=256,
                     n=1
                 )
+                
                 response_text = response['choices'][0]['text']
                 
                 send_telegram_message(chat_id=chat_id_group, message=response_text)
