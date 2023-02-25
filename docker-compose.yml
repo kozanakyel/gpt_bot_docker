@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    volumes:
+      - app-data:/apps/gpt_bot/data
+    command: python gpt_telegram_bot.py
+
+volumes:
+  app-data:
