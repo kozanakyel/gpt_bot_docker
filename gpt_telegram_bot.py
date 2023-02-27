@@ -10,8 +10,6 @@ import shutil
 load_dotenv()
 
 # /getme : bot status for all settings
-
-
 CHATGPT_ENV=os.getenv('CHATGPT')
 CHAT_ID_BOT = os.getenv('CHAT_ID_BOT')
 CHAT_ID_GROUP = os.getenv('M_CHAT_ID')

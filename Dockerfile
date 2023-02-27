@@ -1,7 +1,7 @@
-FROM python:3-alpine
+FROM python:3.8-alpine
 
-WORKDIR /apps/gpt_bot/
+WORKDIR /app
 COPY . .
 RUN ["pip", "install", "-r", "requirements.txt"]
-VOLUME /apps/gpt_bot/data
+
 CMD ["python", "gpt_telegram_bot.py"]
