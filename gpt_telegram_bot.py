@@ -6,6 +6,7 @@ from gtts import gTTS
 import time
 import io
 import shutil
+from tempfile import TemporaryFile
 
 load_dotenv()
 
@@ -130,6 +131,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 file_name = f'data/audios/ChatGPT{remove_spaces(response_text[:5])}.mp3'
                 
                 tts = gTTS(response_text, lang='tr', tld="com")
+                
                 tts.save(file_name)
                 response_tg = send_audio_with_telegram(chat_id=chat_id_group,
                              file_path=file_name,
