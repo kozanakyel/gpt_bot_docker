@@ -117,7 +117,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                 
                 last_textchat = (question, chat)
             elif cond1 and question.startswith('/doc'):
-                response_text= f"Welcome the ShopyVerse GPT Docs.\nUse /gpt for getting Text response.\nUse /vgpt for getting Voice response.\nUse /dpt for creating AI images from Dalle model."
+                response_text= f"Welcome the ShopyVerse GPT Docs.\nUse /gpt for getting Text response.\nUse /vgpt for getting Voice response.\nUse /dgpt for creating AI images from Dalle model."
                 
                 send_telegram_message(chat_id=chat_id_group, message=response_text)
                 print(f'Response : {response_text}') 
