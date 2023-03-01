@@ -184,5 +184,6 @@ telegram_live_gpt_response(url_info=url_info, chat_id_group=CHAT_ID_GROUP, teleg
 # docker run --rm --name gpt_bot -v gpt_bot_data:/data kozanakyel/gpt_bot:v0.2             
 
 
+ 
 # docker build -t kozanakyel/gpt_bot:v0.2 .
 # docker run --rm --name gpt_bot -v gpt_bot_data:/data kozanakyel/gpt_bot:v0.2
